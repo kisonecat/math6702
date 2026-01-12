@@ -152,6 +152,8 @@ def main():
     args = ap.parse_args()
 
     token = os.environ.get("CANVAS_ACCESS_TOKEN")
+    if token is not None:
+        token = token.strip()
     if not token:
         print("ERROR: CANVAS_ACCESS_TOKEN is not set in the environment.", file=sys.stderr)
         sys.exit(2)
@@ -204,4 +206,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
