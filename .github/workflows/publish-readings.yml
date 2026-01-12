@@ -1,0 +1,56 @@
+name: Publish readings to Canvas
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "pages/readings/week*.tex"
+      - "pages/readings/upload.py"
+      - ".github/workflows/publish-readings.yml"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    env:
+      CANVAS_ACCESS_TOKEN: ${{ secrets.CANVAS_ACCESS_TOKEN }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pandoc
+        run: sudo apt-get update && sudo apt-get install -y pandoc
+
+      - name: Build HTML and upload to Canvas
+        working-directory: pages/readings
+        run: |
+          set -euo pipefail
+          urls=(
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-1"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-2"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-3"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-4"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-5"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-6"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-7"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-8"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-9"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-10"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-11"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-12"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-13"
+            "https://osu.instructure.com/courses/205090/pages/plan-for-week-14"
+          )
+          for idx in "${!urls[@]}"; do
+            week_num=$((idx + 1))
+            week_file=$(printf "week%02d.tex" "$week_num")
+            html_file=$(printf "week%02d.html" "$week_num")
+            echo "Building ${week_file} -> ${html_file}"
+            pandoc -s "${week_file}" -o "${html_file}"
+            echo "Uploading ${html_file} -> ${urls[$idx]}"
+            python upload.py "${html_file}" "${urls[$idx]}"
+          done
