@@ -119,17 +119,138 @@ class BodyExtractor(HTMLParser):
             self.parts.append(f"<!--{data}-->")
 
     def _format_starttag(self, tag, attrs, closed: bool):
-        if not attrs:
-            return f"<{tag}{' /' if closed else ''}>"
-        attr_strs = []
-        for key, value in attrs:
-            if value is None:
-                attr_strs.append(key)
-            else:
-                escaped = value.replace('"', "&quot;")
-                attr_strs.append(f'{key}="{escaped}"')
-        attr_section = " ".join(attr_strs)
-        return f"<{tag} {attr_section}{' /' if closed else ''}>"
+        return format_starttag(tag, attrs, closed)
+
+
+def format_starttag(tag, attrs, closed: bool):
+    if not attrs:
+        return f"<{tag}{' /' if closed else ''}>"
+    attr_strs = []
+    for key, value in attrs:
+        if value is None:
+            attr_strs.append(key)
+        else:
+            escaped = value.replace('"', "&quot;")
+            attr_strs.append(f'{key}="{escaped}"')
+    attr_section = " ".join(attr_strs)
+    return f"<{tag} {attr_section}{' /' if closed else ''}>"
+
+
+HEADER_STYLE = (
+    "margin: 0 0 1.5rem 0; padding: 1rem 1.25rem; "
+    "background: #f7f4ea; border-left: 4px solid #b07c2b; "
+    "border-radius: 6px;"
+)
+TITLE_STYLE = (
+    "margin: 0 0 0.35rem 0; font-size: 1.6rem; font-weight: 700; "
+    "line-height: 1.2; color: #2d2110;"
+)
+AUTHOR_STYLE = "margin: 0; font-size: 1rem; font-weight: 600; color: #4b3a1a;"
+DATE_STYLE = "margin: 0.1rem 0 0; font-size: 0.95rem; color: #6a5b3a;"
+UNNUMBERED_H1_STYLE = (
+    "margin: 1.5rem 0 0.5rem; font-size: 1.25rem; text-transform: uppercase; "
+    "letter-spacing: 0.04em; color: #3a2c17; border-bottom: 1px solid #d8c8a2; "
+    "padding-bottom: 0.2rem;"
+)
+PARAGRAPH_STYLE = (
+    "margin: 0 0 0.9rem; font-size: 1.02rem; line-height: 1.6; color: #2f2a22;"
+)
+
+
+def merge_style(attrs, style_add):
+    if not style_add:
+        return attrs
+    style_idx = None
+    for i, (key, _) in enumerate(attrs):
+        if key == "style":
+            style_idx = i
+            break
+    if style_idx is None:
+        attrs.append(("style", style_add))
+        return attrs
+    existing = attrs[style_idx][1] or ""
+    existing = existing.strip()
+    if existing.endswith(";"):
+        merged = f"{existing} {style_add}"
+    elif existing:
+        merged = f"{existing}; {style_add}"
+    else:
+        merged = style_add
+    attrs[style_idx] = ("style", merged)
+    return attrs
+
+
+def class_list(attrs):
+    for key, value in attrs:
+        if key == "class" and value:
+            return value.split()
+    return []
+
+
+class HTMLStyler(HTMLParser):
+    def __init__(self):
+        super().__init__(convert_charrefs=False)
+        self.parts = []
+        self.in_title_header = False
+
+    def handle_starttag(self, tag, attrs):
+        attrs = list(attrs)
+        attrs_map = {key: value for key, value in attrs}
+        classes = class_list(attrs)
+        style_add = ""
+
+        if tag.lower() == "header" and attrs_map.get("id") == "title-block-header":
+            self.in_title_header = True
+            style_add = HEADER_STYLE
+        elif tag.lower() == "h1" and "title" in classes:
+            style_add = TITLE_STYLE
+        elif tag.lower() == "h1" and "unnumbered" in classes:
+            style_add = UNNUMBERED_H1_STYLE
+        elif tag.lower() == "p":
+            if self.in_title_header and "author" in classes:
+                style_add = AUTHOR_STYLE
+            elif self.in_title_header and "date" in classes:
+                style_add = DATE_STYLE
+            elif not self.in_title_header:
+                style_add = PARAGRAPH_STYLE
+
+        attrs = merge_style(attrs, style_add)
+        self.parts.append(format_starttag(tag, attrs, closed=False))
+
+    def handle_startendtag(self, tag, attrs):
+        attrs = list(attrs)
+        attrs_map = {key: value for key, value in attrs}
+        classes = class_list(attrs)
+        style_add = ""
+
+        if tag.lower() == "header" and attrs_map.get("id") == "title-block-header":
+            style_add = HEADER_STYLE
+        elif tag.lower() == "h1" and "title" in classes:
+            style_add = TITLE_STYLE
+        elif tag.lower() == "h1" and "unnumbered" in classes:
+            style_add = UNNUMBERED_H1_STYLE
+        elif tag.lower() == "p" and not self.in_title_header:
+            style_add = PARAGRAPH_STYLE
+
+        attrs = merge_style(attrs, style_add)
+        self.parts.append(format_starttag(tag, attrs, closed=True))
+
+    def handle_endtag(self, tag):
+        if tag.lower() == "header" and self.in_title_header:
+            self.in_title_header = False
+        self.parts.append(f"</{tag}>")
+
+    def handle_data(self, data):
+        self.parts.append(data)
+
+    def handle_entityref(self, name):
+        self.parts.append(f"&{name};")
+
+    def handle_charref(self, name):
+        self.parts.append(f"&#{name};")
+
+    def handle_comment(self, data):
+        self.parts.append(f"<!--{data}-->")
 
 
 def extract_body_html(html: str):
@@ -139,6 +260,13 @@ def extract_body_html(html: str):
     if parser.seen_body:
         return "".join(parser.parts), True
     return html, False
+
+
+def style_html(html: str):
+    parser = HTMLStyler()
+    parser.feed(html)
+    parser.close()
+    return "".join(parser.parts)
 
 
 def main():
@@ -170,6 +298,7 @@ def main():
         sys.exit(2)
 
     new_html, used_body = extract_body_html(new_html)
+    new_html = style_html(new_html)
 
     # Fetch current page (useful sanity check)
     page = http_json("GET", api, token, timeout=30)
