@@ -4,15 +4,14 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - "pages/readings/week*.tex"
-      - "pages/readings/upload.py"
+      - "readings/week*.tex"
+      - "readings/upload.py"
       - ".github/workflows/publish-readings.yml"
 
 jobs:
   publish:
     runs-on: ubuntu-latest
-    env:
-      CANVAS_ACCESS_TOKEN: ${{ secrets.CANVAS_ACCESS_TOKEN }}
+    environment: canvas
     steps:
       - name: Check out repository
         uses: actions/checkout@v4
@@ -26,7 +25,9 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y pandoc
 
       - name: Build HTML and upload to Canvas
-        working-directory: pages/readings
+        env:
+          CANVAS_ACCESS_TOKEN: ${{ secrets.CANVAS_ACCESS_TOKEN }}
+        working-directory: readings
         run: |
           set -euo pipefail
           urls=(
