@@ -8,15 +8,108 @@
 \maketitle
 
 \begin{inspiration}
-This problem set intentionally left blank.
+``Differential geometry is the study of things that are invariant under change of\ldots notation.''
 \end{inspiration}
 
 \section{Terminology}
 
+{\footnotesize The problems in this section ask you to write down definitions. Be careful! Include details.}
+
+\begin{problem}
+  Let $(M,g)$ be a Riemannian manifold. 
+  What is a \textbf{connection} on $TM$?
+\end{problem}
+
+\begin{problem}
+  What is meant by the \textbf{Levi--Civita} connection?
+\end{problem}
+
+\begin{problem}
+  What are the \textbf{Christoffel symbols}?
+\end{problem}
+
 \section{Numericals}
+
+{\footnotesize Perhaps one of the biggest challenges with differential geometry are the calculations! To ensure you can calculate, the ``numerical'' questions ask you to perform some of these calculations. I don't expect you to submit much discussion for these problems.}
+
+\begin{problem}
+Let $(M,g)$ be a Riemannian manifold. Suppose $\nabla$ is a connection on $TM$ that is torsion-free and metric-compatible. Show that
+\[
+2g(\nabla_XY,Z)=Xg(Y,Z)+Yg(Z,X)-Zg(X,Y)
++g([X,Y],Z)-g([Y,Z],X)+g([Z,X],Y).
+\]
+This is the \textbf{Koszul formula}.
+\end{problem}
+
+
+\begin{problem}
+  In local coordinates $(x^1,\dots,x^n)$ write $g=g_{ij}\,dx^i dx^j$ and let $\nabla$ be the Levi--Civita connection so that $\nabla_{\partial_i}\partial_j=\Gamma^k_{ij}\partial_k$.
+
+  Show that
+\[
+\Gamma^m_{ij}
+=\frac12 g^{m\ell}\big(\partial_i g_{j\ell}+\partial_j g_{i\ell}-\partial_\ell g_{ij}\big),
+\]
+\end{problem}
 
 \section{Exploration}
 
+{\footnotesize ``Textbook problems'' can sometimes be \textit{too} straightforward. These ``exploration'' problems require you to address a slightly more open-ended situation. I expect your write-ups will include some discussion.}
+
+\begin{problem}
+When is it the case that $\Gamma^m_{ij}=\Gamma^m_{ji}$?
+\end{problem}
+
+\begin{problem}\label{nabla-on-forms}
+Let $\nabla$ be any connection on $TM$. Define $\nabla$ on $1$-forms by
+\[
+(\nabla_X\alpha)(Y)=X(\alpha(Y))-\alpha(\nabla_XY),
+\]
+How do we extend $\nabla$ to other forms? Concretely, for a $2$-form $\omega$, 
+how do you define $(\nabla_X \omega)(Y,Z)$?
+\end{problem}
+
+
+\begin{problem}
+Let $f\in C^\infty(M)$. Define the \emph{Hessian} of $f$ via
+\[
+\mathrm{Hess}_f(X,Y):=(\nabla_X df)(Y).
+\]
+With \ref{nabla-on-forms}, show that $\mathrm{Hess}_f(X,Y)=X(Yf)-(\nabla_XY)f$.
+
+When is it the case that $\mathrm{Hess}_f(X,Y)=\mathrm{Hess}_f(Y,X)$?
+\end{problem}
+
+\begin{problem}
+Let $(M^2,g)$ be an oriented Riemannian surface and $(e_1,e_2)$ a local oriented orthonormal frame.
+
+Show there is a unique $1$-form $\alpha$ such that for all vector fields $X$,
+\[
+\nabla_X e_1=\alpha(X)e_2,\qquad \nabla_X e_2=-\alpha(X)e_1.
+\]
+Then, along a curve $\gamma$, show that parallel transport rotates by an angle $-\int_\gamma \alpha$.
+\end{problem}
+
 \section{Prove or Disprove and Salvage if Possible}
+
+{\footnotesize Finally, we reach the ``PODASIP'' section. For the following problems, first decide whether the statement is true or false as written. If it is true, give a complete proof that works in full generality (not just examples!) and make clear where the hypotheses are used. If it is false, disprove it with a counterexample: give a specific example that satisfies the assumptions but violates the conclusion. Justify that your example is actually a counterexample! Then try to salvage the statement by making a minimal, natural change---that could be adding a missing hypothesis or weakening the conclusion. State your corrected version clearly and prove it.}
+
+
+\begin{problem}
+  Consider a Riemannian manifold $(M,g)$.  If connections $\nabla$ and $\nabla'$ are torsion-free and metric-compatible with $g$, then $\nabla = \nabla'$.
+\end{problem}
+
+\begin{problem}
+  Parallel transport around a contractible loop is the identity.
+\end{problem}
+
+\begin{problem}
+A curve $\gamma$ is an \emph{affine geodesic} if $\nabla_{\dot\gamma}\dot\gamma=0$.
+In coordinates, such a curve satisfies
+\[
+\ddot\gamma^k+\Gamma^k_{ij}(\gamma(t))\dot\gamma^i(t)\dot\gamma^j(t)=0.
+\]
+and the speed $|\dot\gamma|$ is constant.
+\end{problem}
 
 \end{document}
