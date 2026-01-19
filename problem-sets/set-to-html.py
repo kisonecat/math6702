@@ -591,6 +591,21 @@ def latex_to_html_inline(tex: str) -> str:
         tag_re = re.compile(r"</?(?:em|strong|ol|ul|li|span)\b[^>]*>|<br\s*/?>")
         return tag_re.sub(repl, text), protected
 
+    def protect_entities(text: str) -> Tuple[str, List[str]]:
+        protected: List[str] = []
+
+        def repl(m: re.Match) -> str:
+            protected.append(m.group(0))
+            return f"@@ENT{len(protected) - 1}@@"
+
+        ent_re = re.compile(r"&(#[0-9]+|#x[0-9A-Fa-f]+|[A-Za-z][A-Za-z0-9]+);")
+        return ent_re.sub(repl, text), protected
+
+    def restore_entities(text: str, protected: List[str]) -> str:
+        for i, ent in enumerate(protected):
+            text = text.replace(f"@@ENT{i}@@", ent)
+        return text
+
     def restore_tags(text: str, protected: List[str]) -> str:
         for i, tag in enumerate(protected):
             text = text.replace(f"@@TAG{i}@@", tag)
@@ -627,10 +642,12 @@ def latex_to_html_inline(tex: str) -> str:
             t = re.sub(r"\n[ \t]+", "\n", t)
             # Escape HTML without escaping tags we generated.
             t, protected = protect_tags(t)
+            t, entities = protect_entities(t)
             t = html_escape_content(t)
             # TeX-style quotes (use entities after escaping so & stays intact)
             t = t.replace("``", "&ldquo;").replace("''", "&rdquo;")
             t = replace_tex_dashes(t)
+            t = restore_entities(t, entities)
             t = restore_tags(t, protected)
             out_parts.append(t)
 
