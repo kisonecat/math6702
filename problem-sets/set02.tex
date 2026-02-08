@@ -8,15 +8,125 @@
 \maketitle
 
 \begin{inspiration}
-This problem set intentionally left blank.
 \end{inspiration}
 
 \section{Terminology}
 
+\begin{problem}
+  What are \textbf{normal coordinates}?
+\end{problem}
+
+\begin{problem}
+  What is a \textbf{minimizing geodesic} between points $p$ and $q$?
+\end{problem}
+
+\begin{problem}
+  What is the \textbf{cut locus} of a point $p$?
+\end{problem}
+
 \section{Numericals}
+
+\begin{problem}
+  Consider the hyperbolic plane $\mathbb{H}^2$. Show that for any $p,q \in \mathbb{H}^2$, there is a unique geodesic segment from $p$ to $q$ and that it is minimizing.
+
+  And what does this imply about the cut locus of $\mathbb{H}^2$?
+\end{problem}
+
+\begin{problem}
+  Let's relate \textbf{length} and \textbf{energy} of curves. Let $(M,g)$ be a Riemannian manifold and let $\gamma:[a,b]\to M$ be smooth.
+  Show that
+  \[
+    L(\gamma)=\int_a^b \|\dot\gamma(t)\|\,dt
+    \qquad\text{and}\qquad
+    E(\gamma):=\frac12\int_a^b \|\dot\gamma(t)\|^2\,dt
+  \]
+  satisfy
+  \[
+    L(\gamma)^2 \le (b-a)\cdot 2E(\gamma),
+  \]
+  with equality if and only if $\|\dot\gamma(t)\|$ is constant.
+\end{problem}
 
 \section{Exploration}
 
+\begin{problem}
+  Show that the function $x\mapsto d(m,x)$ is Lipschitz, but also show that $x\mapsto d(m,x)$ may \emph{not} be smooth everywhere.
+\end{problem}
+  
+\begin{problem}
+  Suppose $(M,g)$ is a complete Riemannian manifold and $M$ has finite diameter, i.e., there exists $B$ so that for all $x, y \in M$, we have $d(x,y) < B$.
+
+  Does this imply that $M$ is compact?
+\end{problem}
+
+\begin{problem}
+On a complete Riemannian manifold $(M,g)$, a \textbf{geodesic ray} is an isometric embedding $r:[0,\infty)\to M$.
+
+Define a relation on geodesic rays by $r \sim s$ iff
+  \[
+    \sup_{t\ge 0} d\bigl(r(t),s(t)\bigr) < \infty.
+  \]
+  Prove that this is an equivalence relation.
+\end{problem}
+
+\begin{problem}
+  The \textbf{visual boundary} of $M$ is the set of equivalence classes
+  \[
+    \partial_\infty M := \{\text{geodesic rays in }M\}/\sim.
+  \]
+  Fix a basepoint $p\in M$ and let $\mathcal R_p$ denote the set of geodesic rays
+  $r:[0,\infty)\to X$ with $r(0)=p$.
+  Define 
+  \[
+    \Phi:\ \mathcal R_p/\sim \ \longrightarrow\ \partial_\infty M,
+    \qquad
+    [r]\longmapsto \text{the equivalence class of $r$ in $\partial_\infty M$}.
+  \]
+  Show that $\Phi$ is a bijection.
+\end{problem}
+
+\begin{problem}
+  Determine $\partial_\infty \mathbb{R}^2$.
+\end{problem}
+
+\begin{problem}
+  Determine $\partial_\infty \mathbb{H}^2$.
+\end{problem}
+
+\begin{problem}
+  Determine $\partial_\infty (S^1 \times \mathbb{R})$.
+\end{problem}
+
+\begin{problem}
+In some cases, the \textbf{marked length spectrum} determines the geometry.
+
+Let $\R^2/\Gamma$ and $\R^2/\Gamma'$ be flat tori, where
+$\Gamma,\Gamma'\subset \R^2$ are lattices.
+Define for $\gamma\in \Gamma\setminus\{0\}$,
+\[
+  \ell(\gamma)=\inf\{\text{Length}(\alpha): \alpha \text{ is a loop
+  representing the free homotopy class corresponding to }\gamma\}.
+\]
+
+Suppose there is a group isomorphism $\phi:\Gamma\to\Gamma'$ such that
+\[
+  \ell(\phi(\gamma))=\ell(\gamma)\qquad\text{for all }\gamma\in\Gamma\setminus\{0\}.
+\]
+Show that  $\R^2/\Gamma$ and $\R^2/\Gamma'$ are isometric.
+\end{problem}
+
 \section{Prove or Disprove and Salvage if Possible}
+
+\begin{problem}
+  In a Riemannian manifold, closed metric balls are compact.
+\end{problem}
+
+\begin{problem}
+  Let $(M,g)$ be a connected Riemannian manifold and $d$ the distance metric induced from the Riemannian metric $g$.
+  Then for every smooth curve $\gamma:[a,b]\to M$,
+  \[
+    L(\gamma)=d(\gamma(a),\gamma(b)).
+  \]
+\end{problem}
 
 \end{document}
