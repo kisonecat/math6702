@@ -8,15 +8,72 @@
 \maketitle
 
 \begin{inspiration}
-This problem set intentionally left blank.
+  ``Improvement makes strait roads, but the crooked roads without Improvement, are roads of Genius.''
+\byline{William Blake, perhaps complaining about geodesics or praising curvature.}
 \end{inspiration}
 
 \section{Terminology}
 
+\begin{problem}
+  Consider a Riemannian manifold $(M,g)$ with a Levi--Civita connection $\nabla$.
+
+  What is the \textbf{Riemann curvature tensor} $R$ of $\nabla$?
+\end{problem}
+
+\begin{problem}
+  What is the \textbf{sectional curvature} $K(\sigma)$ of a two-dimensional subspace $\sigma \subset T_pM$?
+\end{problem}
+
+\begin{problem}
+  What is a \textbf{Jacobi field} along a geodesic $\gamma$?
+\end{problem}
+
 \section{Numericals}
+
+\begin{problem}\label{curvature-symmetries}
+  Let $R(X,Y)Z = \nabla_X\nabla_YZ - \nabla_Y\nabla_XZ - \nabla_{[X,Y]}Z$ be the Riemann curvature tensor. Show that
+  $R(X,Y)Z = -R(Y,X)Z$.
+\end{problem}
+
+\begin{problem}
+  Prove the first Bianchi identity,
+  \[
+    R(X,Y)Z + R(Y,Z)X + R(Z,X)Y = 0.
+  \]
+\end{problem}
+
+\begin{problem}
+  Let $(M,g)$ be a Riemannian manifold with Ricci curvature and scalar curvature defined by
+  \[
+    \operatorname{Ric}(X,Y) = \operatorname{tr}(Z \mapsto R(Z,X)Y),
+    \qquad
+    S = \operatorname{tr}_g \operatorname{Ric}.
+  \]
+  Compute $\operatorname{Ric}$ and $S$ for the round sphere of radius $r$.
+\end{problem}
 
 \section{Exploration}
 
+\begin{problem}
+  Let $J$ be a Jacobi field along a unit-speed geodesic $\gamma$ in a Riemannian manifold of constant sectional curvature $K$.
+  Suppose $J$ is orthogonal to $\dot\gamma$ and satisfies $J(0)=0$ and $\|J'(0)\|=1$.
+  Find an explicit formula for $J(t)$.
+\end{problem}
+
+\begin{problem}
+  Show that if $(M,g)$ has all sectional curvatures $K \le 0$, then every geodesic is a local minimum of energy (among curves with fixed endpoints).
+\end{problem}
+
 \section{Prove or Disprove and Salvage if Possible}
+
+\begin{problem}
+  If $(M,g)$ has constant sectional curvature $K > 0$, then every geodesic has conjugate points.
+\end{problem}
+
+
+\begin{problem}
+  If the sectional curvature of $(M,g)$ is everywhere positive, then $(M,g)$ has positive Ricci curvature.
+\end{problem}
+
 
 \end{document}
